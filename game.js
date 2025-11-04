@@ -6357,7 +6357,7 @@ ig.module("impact.image").defines(function() {
             this.load()
         },
 load: function(b) {
-    const cdnPrefix = "https://cdn.jsdelivr.net/gh/netclassroom/felek@main/media/";
+    const cdnPrefix = "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/";
     const useCDN = true;
 
     this.loaded ? b && b(this.path, !0) : (!this.loaded && ig.ready ? (
