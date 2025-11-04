@@ -5701,10 +5701,7 @@ if (d) {
         I.load();
     }
     return c;
-}
-c.on("loaderror", Error("No codec support for selected audio sources."));
-}
-,
+},
         urls: function(b) {
             return b ? (this.stop(), this._urls = "string" === typeof b ? [b] : b, this._loaded = !1, this.load(), this) : this._urls
         },
