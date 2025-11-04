@@ -5635,89 +5635,77 @@ jukebox.Manager.prototype = {
                         break
                     }
                 }
-loadAudio: function(b) {
-    // ... (eğer fonksiyon adı farklıysa sadece fonksiyon gövdesini değiştir)
+if (d) {
     const cdnPrefix = "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/";
 
-    if (d) {
-        // CDN yönlendirme: yalnızca tam URL değilse CDN'e çevir
+    // CDN yönlendirme: yalnızca tam URL değilse CDN'e çevir
+    if (!/^https?:\/\//.test(d)) {
+        d = cdnPrefix + d.replace(/^(\.\/)?/, "");
+    }
+
+    c._src = d;
+    if (c._webAudio) {
+        var z = d;
+        if (z in b) c._duration = b[z].duration, E(c);
+        else if (/^data:[^;]+;base64,/.test(z)) {
+            d = atob(z.split(",")[1]);
+            g = new Uint8Array(d.length);
+            for (j = 0; j < d.length; ++j) g[j] = d.charCodeAt(j);
+            C(g.buffer, c, z);
+        } else {
+            var t = new XMLHttpRequest;
+            t.open("GET", z, !0);
+            t.responseType = "arraybuffer";
+            t.onload = function() {
+                C(t.response, c, z);
+            };
+            t.onerror = function() {
+                console.warn("CDN ses yüklenemedi, yerelden deneniyor:", z);
+                c._webAudio && (c._buffer = !0, c._webAudio = !1, c._audioNode = [], delete c._gainNode, delete b[z], c.load());
+            };
+            try {
+                t.send();
+            } catch (ya) {
+                t.onerror();
+            }
+        }
+    } else {
+        var I = new Audio;
+        I.addEventListener("error", function() {
+            I.error && 4 === I.error.code && (n.noAudio = !0);
+            c.on("loaderror", {
+                type: I.error ? I.error.code : 0
+            });
+        }, !1);
+        c._audioNode.push(I);
+
+        // CDN yönlendirme (HTMLAudio için de)
         if (!/^https?:\/\//.test(d)) {
             d = cdnPrefix + d.replace(/^(\.\/)?/, "");
         }
 
-        c._src = d;
-        if (c._webAudio) {
-            var z = d;
-            if (z in b) {
-                c._duration = b[z].duration;
-                E(c);
-            } else if (/^data:[^;]+;base64,/.test(z)) {
-                d = atob(z.split(",")[1]);
-                g = new Uint8Array(d.length);
-                for (j = 0; j < d.length; ++j) g[j] = d.charCodeAt(j);
-                C(g.buffer, c, z);
-            } else {
-                var t = new XMLHttpRequest();
-                t.open("GET", z, !0);
-                t.responseType = "arraybuffer";
-                t.onload = function() {
-                    C(t.response, c, z);
-                };
-                t.onerror = function() {
-                    console.warn("CDN ses yüklenemedi, yerelden deneniyor:", z);
-                    c._webAudio && (c._buffer = !0, c._webAudio = !1, c._audioNode = [], delete c._gainNode, delete b[z], c.load());
-                };
-                try {
-                    t.send();
-                } catch (ya) {
-                    t.onerror();
-                }
-            }
-        } else {
-            var I = new Audio();
-            I.addEventListener("error", function() {
-                I.error && 4 === I.error.code && (n.noAudio = !0);
-                c.on("loaderror", {
-                    type: I.error ? I.error.code : 0
-                });
-            }, !1);
-            c._audioNode.push(I);
-
-            // CDN yönlendirme (HTMLAudio için de)
-            if (!/^https?:\/\//.test(d)) {
-                d = cdnPrefix + d.replace(/^(\.\/)?/, "");
-            }
-
-            I.src = d;
-            I._pos = 0;
-            I.preload = "auto";
-            I.volume = r._muted ? 0 : c._volume * r.volume();
-            var T = function() {
-                c._duration = Math.ceil(10 * I.duration) / 10;
-                if (0 === Object.getOwnPropertyNames(c._sprite).length) {
-                    c._sprite = { _default: [0, 1E3 * c._duration] };
-                }
-                if (!c._loaded) {
-                    c._loaded = !0;
-                    c.on("load");
-                }
-                c._autoplay && c.play();
-                I.removeEventListener("canplaythrough", T, !1);
-            };
-            I.addEventListener("canplaythrough", T, !1);
-            I.load();
-        }
-
-        return c;
+        I.src = d;
+        I._pos = 0;
+        I.preload = "auto";
+        I.volume = r._muted ? 0 : c._volume * r.volume();
+        var T = function() {
+            c._duration = Math.ceil(10 * I.duration) / 10;
+            0 === Object.getOwnPropertyNames(c._sprite).length && (c._sprite = {
+                _default: [0, 1E3 * c._duration]
+            });
+            c._loaded || (c._loaded = !0, c.on("load"));
+            c._autoplay && c.play();
+            I.removeEventListener("canplaythrough", T, !1);
+        };
+        I.addEventListener("canplaythrough", T, !1);
+        I.load();
     }
-
-    // Eğer `d` tanımsızsa hata bildirimi burada olmalı (aynı fonksiyon içinde)
-    c.on("loaderror", Error("No codec support for selected audio sources."));
-
-} // <-- fonksiyon kapandı, nesne içindeki sonraki özellik için virgül burada OLAMALI
-urls: function(b) {
-    // urls fonksiyonu buradan devam eder...
-
+    return c;
+}
+c.on("loaderror", Error("No codec support for selected audio sources."));
+}
+,
+        urls: function(b) {
             return b ? (this.stop(), this._urls = "string" === typeof b ? [b] : b, this._loaded = !1, this.load(), this) : this._urls
         },
         play: function(d, e) {
