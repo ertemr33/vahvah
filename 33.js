@@ -417,7 +417,7 @@ var _STRINGS = {
                 }
             },
             meta: {
-                image: "media/graphics/game/ui/win-result-atlas.png",
+                image: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/ui/win-result-atlas.png",
                 size: {
                     w: 434,
                     h: 409
@@ -766,9 +766,9 @@ var _STRINGS = {
             }
         },
         meta: {
-            image: "media/graphics/game/card.png",
-            imageBig: "media/graphics/game/card-big.png",
-            imagebw: "media/graphics/game/cardbw.png",
+            image: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/card.png",
+            imageBig: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/card-big.png",
+            imagebw: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/cardbw.png",
             size: {
                 w: 273,
                 h: 326
@@ -1050,7 +1050,7 @@ var _STRINGS = {
             }
         },
         meta: {
-            image: "media/graphics/game/troops-card.png",
+            image: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/troops-card.png",
             size: {
                 w: 324,
                 h: 307
@@ -5635,73 +5635,63 @@ jukebox.Manager.prototype = {
                         break
                     }
                 }
-if (d) {
-    const cdnPrefix = "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/";
-
-    // CDN yönlendirme: yalnızca tam URL değilse CDN'e çevir
-    if (!/^https?:\/\//.test(d)) {
-        d = cdnPrefix + d.replace(/^(\.\/)?/, "");
-    }
-
-    c._src = d;
-    if (c._webAudio) {
-        var z = d;
-        if (z in b) c._duration = b[z].duration, E(c);
-        else if (/^data:[^;]+;base64,/.test(z)) {
-            d = atob(z.split(",")[1]);
-            g = new Uint8Array(d.length);
-            for (j = 0; j < d.length; ++j) g[j] = d.charCodeAt(j);
-            C(g.buffer, c, z);
-        } else {
-            var t = new XMLHttpRequest;
-            t.open("GET", z, !0);
-            t.responseType = "arraybuffer";
-            t.onload = function() {
-                C(t.response, c, z);
-            };
-            t.onerror = function() {
-                console.warn("CDN ses yüklenemedi, yerelden deneniyor:", z);
-                c._webAudio && (c._buffer = !0, c._webAudio = !1, c._audioNode = [], delete c._gainNode, delete b[z], c.load());
-            };
-            try {
-                t.send();
-            } catch (ya) {
-                t.onerror();
+                if (d) {
+                    c._src = d;
+                    if (c._webAudio) {
+                        var z = d;
+                        if (z in b) c._duration = b[z].duration, E(c);
+                        else if (/^data:[^;]+;base64,/.test(z)) {
+                            d = atob(z.split(",")[1]);
+                            g = new Uint8Array(d.length);
+                            for (j = 0; j < d.length; ++j) g[j] = d.charCodeAt(j);
+                            C(g.buffer, c, z)
+                        } else {
+                            var t = new XMLHttpRequest;
+                            t.open("GET", z, !0);
+                            t.responseType = "arraybuffer";
+                            t.onload = function() {
+                                C(t.response, c, z)
+                            };
+                            t.onerror = function() {
+                                c._webAudio && (c._buffer = !0, c._webAudio = !1, c._audioNode = [], delete c._gainNode, delete b[z], c.load())
+                            };
+                            try {
+                                t.send()
+                            } catch (ya) {
+                                t.onerror()
+                            }
+                        }
+                    } else {
+                        var I = new Audio;
+                        I.addEventListener("error", function() {
+                            I.error && 4 === I.error.code && (n.noAudio = !0);
+                            c.on("loaderror", {
+                                type: I.error ? I.error.code : 0
+                            })
+                        }, !1);
+                        c._audioNode.push(I);
+                        I.src = d;
+                        I._pos = 0;
+                        I.preload = "auto";
+                        I.volume = r._muted ? 0 : c._volume * r.volume();
+                        var T = function() {
+                            c._duration = Math.ceil(10 * I.duration) / 10;
+                            0 === Object.getOwnPropertyNames(c._sprite).length && (c._sprite = {
+                                _default: [0, 1E3 * c._duration]
+                            });
+                            c._loaded || (c._loaded = !0, c.on("load"));
+                            c._autoplay && c.play();
+                            I.removeEventListener("canplaythrough",
+                                T, !1)
+                        };
+                        I.addEventListener("canplaythrough", T, !1);
+                        I.load()
+                    }
+                    return c
+                }
+                c.on("loaderror", Error("No codec support for selected audio sources."))
             }
-        }
-    } else {
-        var I = new Audio;
-        I.addEventListener("error", function() {
-            I.error && 4 === I.error.code && (n.noAudio = !0);
-            c.on("loaderror", {
-                type: I.error ? I.error.code : 0
-            });
-        }, !1);
-        c._audioNode.push(I);
-
-        // CDN yönlendirme (HTMLAudio için de)
-        if (!/^https?:\/\//.test(d)) {
-            d = cdnPrefix + d.replace(/^(\.\/)?/, "");
-        }
-
-        I.src = d;
-        I._pos = 0;
-        I.preload = "auto";
-        I.volume = r._muted ? 0 : c._volume * r.volume();
-        var T = function() {
-            c._duration = Math.ceil(10 * I.duration) / 10;
-            0 === Object.getOwnPropertyNames(c._sprite).length && (c._sprite = {
-                _default: [0, 1E3 * c._duration]
-            });
-            c._loaded || (c._loaded = !0, c.on("load"));
-            c._autoplay && c.play();
-            I.removeEventListener("canplaythrough", T, !1);
-        };
-        I.addEventListener("canplaythrough", T, !1);
-        I.load();
-    }
-    return c;
-},
+        },
         urls: function(b) {
             return b ? (this.stop(), this._urls = "string" === typeof b ? [b] : b, this._loaded = !1, this.load(), this) : this._urls
         },
@@ -6366,8 +6356,8 @@ ig.module("impact.image").defines(function() {
             this.path = b;
             this.load()
         },
-load: function(b) {
-    const cdnPrefix = "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/";
+        load: function(b) {
+    const cdnPrefix = "https://cdn.jsdelivr.net/gh/netclassroom/felek@main/media/";
     const useCDN = true;
 
     this.loaded ? b && b(this.path, !0) : (!this.loaded && ig.ready ? (
@@ -6378,8 +6368,7 @@ load: function(b) {
         this.data.src = (useCDN ? cdnPrefix : ig.prefix) + this.path + ig.nocache
     ) : ig.addResource(this),
     ig.Image.cache[this.path] = this);
-}
-,
+        },
         reload: function() {
             this.loaded = !1;
             this.data = new Image;
@@ -8761,75 +8750,75 @@ ig.module("plugins.audio.sound-info").defines(function() {
         },
         sfx: {
             kittyopeningSound: {
-                path: "media/audio/opening/kittyopening"
+                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/opening/kittyopening"
             },
             staticSound: {
-                path: "media/audio/play/static"
+                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/play/static"
             },
             openingSound: {
-                path: "media/audio/opening/opening"
+                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/opening/opening"
             },
             battleSound: {
-                path: "media/audio/game/start-battle-long"
+                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/game/start-battle-long"
             },
             clickSound: {
-                path: "media/audio/game/click"
+                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/game/click"
             },
             starOneSound: {
-                path: "media/audio/game/sone"
+                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/game/sone"
             },
             starTwoSound: {
-                path: "media/audio/game/stwo"
+                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/game/stwo"
             },
             starThreeSound: {
-                path: "media/audio/game/sthree"
+                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/game/sthree"
             },
             woshArrowSound: {
-                path: "media/audio/game/arrow-shower-f"
+                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/game/arrow-shower-f"
             },
             woshFireSound: {
-                path: "media/audio/game/wosh-fireball-a"
+                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/game/wosh-fireball-a"
             },
             berserkSound: {
-                path: "media/audio/game/berserk"
+                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/game/berserk"
             },
             fireblastSound: {
-                path: "media/audio/game/explode"
+                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/game/explode"
             },
             freezSound: {
-                path: "media/audio/game/freez"
+                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/game/freez"
             },
             hammerEarthSound: {
-                path: "media/audio/game/earthquake-fade"
+                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/game/earthquake-fade"
             },
             hammercrushSound: {
-                path: "media/audio/game/giant-sound"
+                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/game/giant-sound"
             },
             thunderSound: {
-                path: "media/audio/game/thunder"
+                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/game/thunder"
             },
             maleOneSound: {
-                path: "media/audio/game/m-aikh"
+                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/game/m-aikh"
             },
             maleTwoSound: {
-                path: "media/audio/game/m-argh"
+                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/game/m-argh"
             },
             maleThreeSound: {
-                path: "media/audio/game/m-ok"
+                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/game/m-ok"
             },
             maleFourSound: {
-                path: "media/audio/game/m-yach"
+                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/game/m-yach"
             },
             femaleSound: {
-                path: "media/audio/game/mage"
+                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/game/mage"
             },
             hitMeleSound: {
-                path: "media/audio/game/meleweapon"
+                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/game/meleweapon"
             }
         },
         bgm: {
             background: {
-                path: "media/audio/bgm",
+                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/bgmz",
                 startOgg: 0,
                 endOgg: 12.309,
                 startMp3: 0,
@@ -9429,9 +9418,9 @@ ig.module("plugins.io.io-manager").requires("plugins.io.storage", "plugins.io.mo
 ig.baked = !0;
 ig.module("plugins.splash-loader").requires("impact.loader", "impact.animation").defines(function() {
     ig.SplashLoader = ig.Loader.extend({
-        splashDesktop: new ig.Image("media/graphics/splash/mobile/cover.jpg"),
-        splashMobile: new ig.Image("media/graphics/splash/mobile/cover.jpg"),
-        loadingImg: new ig.Image("media/graphics/game/loading-bar.png"),
+        splashDesktop: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/splash/mobile/cover.jpg"),
+        splashMobile: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/splash/mobile/cover.jpg"),
+        loadingImg: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/loading-bar.png"),
         init: function(b, c) {
             this.parent(b, c);
             ig.apiHandler.run("MJSPreroll")
@@ -9947,7 +9936,7 @@ ig.module("plugins.branding.splash").requires("impact.impact", "impact.entity").
             x: 32,
             y: 32
         },
-        splash: new ig.Image("branding/splash1.png"),
+        splash: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/branding/splash1.png"),
         init: function(b, c, d) {
             this.parent(b, c, d);
             320 >= ig.system.width ? (this.size.x = 320, this.size.y = 200) : (this.size.x = 480, this.size.y = 240);
@@ -9981,7 +9970,7 @@ ig.module("plugins.branding.splash").requires("impact.impact", "impact.entity").
             return !1
         },
         checkClickableLayer: function(b, c, d) {
-            "undefined" == typeof wm && (this.doesClickableLayerExist(b) ? (ig.game.showOverlay([b]), $("#" + b).find("[href]").attr("href", c)) : this.createClickableOutboundLayer(b, c, "media/graphics/misc/invisible.png", d))
+            "undefined" == typeof wm && (this.doesClickableLayerExist(b) ? (ig.game.showOverlay([b]), $("#" + b).find("[href]").attr("href", c)) : this.createClickableOutboundLayer(b, c, "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/misc/invisible.png", d))
         },
         createClickableOutboundLayer: function(b, c, d, e) {
             var g = ig.$new("div");
@@ -10053,7 +10042,7 @@ ig.module("plugins.clickable-div-layer").requires("plugins.data.vector").defines
         pos: new Vector2(0, 0),
         size: new Vector2(0, 0),
         identifier: null,
-        invisImagePath: "media/graphics/misc/invisible.png",
+        invisImagePath: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/misc/invisible.png",
         init: function(b) {
             this.pos = new Vector2(b.pos.x, b.pos.y);
             this.size = new Vector2(b.size.x, b.size.y);
@@ -10122,7 +10111,7 @@ ig.module("game.entities.buttons.button-branding-logo").requires("game.entities.
     EntityButtonBrandingLogo = EntityButton.extend({
         type: ig.Entity.TYPE.A,
         gravityFactor: 0,
-        logo: new ig.AnimationSheet("branding/logo.png", _SETTINGS.Branding.Logo.Width, _SETTINGS.Branding.Logo.Height),
+        logo: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/branding/logo.png", _SETTINGS.Branding.Logo.Width, _SETTINGS.Branding.Logo.Height),
         zIndex: 10001,
         size: {
             x: 64,
@@ -10202,7 +10191,7 @@ ig.module("game.entities.buttons.button-more-games").requires("game.entities.but
     EntityButtonMoreGames = EntityButton.extend({
         type: ig.Entity.TYPE.A,
         gravityFactor: 0,
-        logo: new ig.AnimationSheet("media/graphics/game/more_games_btn.png", 71, 40),
+        logo: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/more_games_btn.png", 71, 40),
         size: {
             x: 71,
             y: 40
@@ -10243,9 +10232,9 @@ ig.module("game.entities.opening-shield").requires("impact.entity").defines(func
         mIconAnim: 0,
         shieldAnim: 0,
         titleAnim: 0,
-        shieldImage: new ig.Image("media/graphics/opening/shield.png"),
-        mIconImage: new ig.Image("media/graphics/opening/m_icon.png"),
-        titleImage: new ig.Image("media/graphics/opening/title.png"),
+        shieldImage: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/opening/shield.png"),
+        mIconImage: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/opening/m_icon.png"),
+        titleImage: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/opening/title.png"),
         init: function(b, c, d) {
             this.parent(b, c, d)
         },
@@ -10312,8 +10301,8 @@ ig.module("game.entities.opening-kitty").requires("impact.entity").defines(funct
             y: 48
         },
         kittyAnim: -1,
-        kittyImage: new ig.Image("media/graphics/opening/kitty.png"),
-        kittyTitleImage: new ig.Image("media/graphics/opening/kittytitle.png"),
+        kittyImage: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/opening/kitty.png"),
+        kittyTitleImage: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/opening/kittytitle.png"),
         soundKey: "kittyopeningSound",
         init: function(b, c, d) {
             this.parent(b, c, d)
@@ -10447,7 +10436,7 @@ ig.module("game.entities.select").requires("impact.entity").defines(function() {
         },
         checkClickableLayer: function(b,
             c, d) {
-            "undefined" == typeof wm && (this.doesClickableLayerExist(b) ? (ig.game.showOverlay([b]), $("#" + b).find("[href]").attr("href", c)) : this.createClickableOutboundLayer(b, c, "media/graphics/misc/invisible.png", d))
+            "undefined" == typeof wm && (this.doesClickableLayerExist(b) ? (ig.game.showOverlay([b]), $("#" + b).find("[href]").attr("href", c)) : this.createClickableOutboundLayer(b, c, "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/misc/invisible.png", d))
         },
         createClickableOutboundLayer: function(b, c, d, e) {
             var g = ig.$new("div");
@@ -10491,10 +10480,10 @@ ig.module("game.entities.select").requires("impact.entity").defines(function() {
 ig.baked = !0;
 ig.module("game.entities.troopers.battle-trainer").requires("impact.entity").defines(function() {
     EntityBattleTrainer = ig.Entity.extend({
-        walkSheet: new ig.AnimationSheet("media/graphics/game/troops/mage-w.png", 30, 50),
-        walkRSheet: new ig.AnimationSheet("media/graphics/game/troops/mage-wr.png", 30, 50),
-        attackSheet: new ig.AnimationSheet("media/graphics/game/troops/mage-a.png", 35, 50),
-        attackRSheet: new ig.AnimationSheet("media/graphics/game/troops/mage-ar.png", 35, 50),
+        walkSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/troops/mage-w.png", 30, 50),
+        walkRSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/troops/mage-wr.png", 30, 50),
+        attackSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/troops/mage-a.png", 35, 50),
+        attackRSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/troops/mage-ar.png", 35, 50),
         offset: {
             x: 28,
             y: 25
@@ -10590,8 +10579,8 @@ ig.baked = !0;
 ig.module("game.entities.tutorial-game").requires("impact.entity").defines(function() {
     EntityTutorialGame = ig.Entity.extend({
         zIndex: 1800,
-        tutBBchat: new ig.Image("media/graphics/game/tutorial-chat-player.png"),
-        tutTowerD: new ig.Image("media/graphics/game/tutorial-tower-d.png"),
+        tutBBchat: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/tutorial-chat-player.png"),
+        tutTowerD: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/tutorial-tower-d.png"),
         bubbleChatPos: {
             x: -120,
             y: 70
@@ -10670,8 +10659,8 @@ ig.module("game.entities.tutorial-game").requires("impact.entity").defines(funct
         }
     });
     EntityHand = ig.Entity.extend({
-        handUp: new ig.Image("media/graphics/game/hand_up.png"),
-        handClick: new ig.Image("media/graphics/game/hand_click.png"),
+        handUp: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/hand_up.png"),
+        handClick: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/hand_click.png"),
         isClick: !1,
         zIndex: 1500,
         init: function(b, c, d) {
@@ -10750,8 +10739,8 @@ ig.module("game.entities.tutorial-game").requires("impact.entity").defines(funct
         }
     });
     EntityHandClickCard = ig.Entity.extend({
-        handUp: new ig.Image("media/graphics/game/hand_up.png"),
-        handClick: new ig.Image("media/graphics/game/hand_click.png"),
+        handUp: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/hand_up.png"),
+        handClick: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/hand_click.png"),
         isClick: !1,
         zIndex: 1801,
         init: function(b, c, d) {
@@ -10796,7 +10785,7 @@ ig.baked = !0;
 ig.module("game.entities.main-background").requires("impact.entity", "game.entities.tutorial-game").defines(function() {
     EntityMainBackground = ig.Entity.extend({
         zIndex: 1,
-        bgImage: new ig.Image("media/graphics/splash/mobile/cover.jpg"),
+        bgImage: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/splash/mobile/cover.jpg"),
         init: function(b, c, d) {
             this.parent(b, c, d)
         },
@@ -10823,7 +10812,7 @@ ig.module("game.entities.buttons.button-battle").requires("game.entities.buttons
         size: new Vector2(129, 62),
         fillColor: null,
         zIndex: 151,
-        img: new ig.Image("media/graphics/game/ui/empty-btn.png"),
+        img: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/ui/empty-btn.png"),
         init: function(b, c, d) {
             this.parent(b, c, d);
             ig.game.sortEntitiesDeferred()
@@ -10853,7 +10842,7 @@ ig.module("game.entities.buttons.button-deck").requires("game.entities.buttons.b
         size: new Vector2(51, 51),
         fillColor: null,
         zIndex: 1E3,
-        img: new ig.Image("media/graphics/game/ui/deck-btn.png"),
+        img: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/ui/deck-btn.png"),
         init: function(b, c, d) {
             this.parent(b, c, d)
         },
@@ -10877,7 +10866,7 @@ ig.module("game.entities.buttons.button-sound").requires("game.entities.buttons.
         size: new Vector2(25, 25),
         fillColor: null,
         zIndex: 95E3,
-        animSheet: new ig.AnimationSheet("media/graphics/game/ui/sound-btn.png", 29, 23),
+        animSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/ui/sound-btn.png", 29, 23),
         init: function(b, c, d) {
             this.parent(b, c, d);
             this.addAnim("soundOn", 1, [1]);
@@ -10908,7 +10897,7 @@ ig.module("game.entities.buttons.button-yes").requires("game.entities.buttons.bu
             x: 0,
             y: 0
         },
-        img: new ig.Image("media/graphics/game/ui/small-empty-btn.png"),
+        img: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/ui/small-empty-btn.png"),
         init: function(b, c, d) {
             this.parent(b, c, d);
             this.control = d.control;
@@ -10950,7 +10939,7 @@ ig.module("game.entities.buttons.button-no").requires("game.entities.buttons.but
             x: 0,
             y: 0
         },
-        img: new ig.Image("media/graphics/game/ui/small-empty-btn.png"),
+        img: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/ui/small-empty-btn.png"),
         init: function(b, c, d) {
             this.parent(b, c, d);
             this.control = d.control;
@@ -10986,7 +10975,7 @@ ig.module("game.entities.buttons.button-no").requires("game.entities.buttons.but
 ig.baked = !0;
 ig.module("game.entities.ui.popup-tutorial").requires("impact.entity", "game.entities.buttons.button-yes", "game.entities.buttons.button-no").defines(function() {
     EntityPopupTutorial = ig.Entity.extend({
-        img: new ig.Image("media/graphics/game/tutorial-popup.png"),
+        img: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/tutorial-popup.png"),
         zIndex: 200,
         size: {
             x: 316,
@@ -11082,7 +11071,7 @@ ig.baked = !0;
 ig.module("game.entities.deck-background").requires("impact.entity").defines(function() {
     EntityDeckBackground = ig.Entity.extend({
         zIndex: 1,
-        img: new ig.Image("media/graphics/game/deck-bg.png"),
+        img: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/deck-bg.png"),
         init: function(b, c, d) {
             this.parent(b, c, d)
         },
@@ -11231,7 +11220,7 @@ ig.module("game.entities.buttons.button-use").requires("game.entities.buttons.bu
         type: ig.Entity.TYPE.A,
         size: new Vector2(85, 41),
         zIndex: 120,
-        img: new ig.Image("media/graphics/game/ui/xs-empty-btn.png", 129, 62),
+        img: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/ui/xs-empty-btn.png", 129, 62),
         callBy: null,
         battleDeck: null,
         init: function(b, c, d) {
@@ -11268,7 +11257,7 @@ ig.module("game.entities.buttons.button-use").requires("game.entities.buttons.bu
             type: ig.Entity.TYPE.A,
             size: new Vector2(100, 48),
             zIndex: 2100,
-            img: new ig.Image("media/graphics/game/ui/small-empty-btn.png"),
+            img: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/ui/small-empty-btn.png"),
             followPos: null,
             isUsing: !1,
             init: function(b, c, d) {
@@ -11305,7 +11294,7 @@ ig.module("game.entities.buttons.button-info").requires("game.entities.buttons.b
         type: ig.Entity.TYPE.A,
         size: new Vector2(85, 41),
         zIndex: 120,
-        img: new ig.Image("media/graphics/game/ui/xs-empty-btn.png"),
+        img: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/ui/xs-empty-btn.png"),
         callBy: null,
         battleDeck: null,
         init: function(b, c, d) {
@@ -11348,7 +11337,7 @@ ig.module("game.entities.buttons.button-close").requires("game.entities.buttons.
         zIndex: 2200,
         followPos: null,
         oneShot: !1,
-        img: new ig.Image("media/graphics/game/ui/close-btn.png"),
+        img: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/ui/close-btn.png"),
         init: function(b, c, d) {
             this.parent(b, c, d)
         },
@@ -11371,15 +11360,15 @@ ig.module("game.entities.buttons.button-close").requires("game.entities.buttons.
 ig.baked = !0;
 ig.module("game.entities.ui.popup-info").requires("impact.entity", "game.entities.buttons.button-use", "game.entities.buttons.button-close").defines(function() {
     EntityPopupInfo = ig.Entity.extend({
-        img: new ig.Image("media/graphics/game/ui/popup-info.png"),
-        infoBoxImg: new ig.Image("media/graphics/game/ui/info-box.png"),
-        hpIconImg: new ig.Image("media/graphics/game/ui/heart-icon.png"),
-        dmgIconImg: new ig.Image("media/graphics/game/ui/dmg-icon.png"),
-        dpsIconImg: new ig.Image("media/graphics/game/ui/dps-icon.png"),
-        durationIconImg: new ig.Image("media/graphics/game/ui/duration-spell.png"),
-        durspellIconImg: new ig.Image("media/graphics/game/ui/duration.png"),
-        moveIconImg: new ig.Image("media/graphics/game/ui/move-icon.png"),
-        typeBoxImg: new ig.Image("media/graphics/game/ui/type-info.png"),
+        img: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/ui/popup-info.png"),
+        infoBoxImg: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/ui/info-box.png"),
+        hpIconImg: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/ui/heart-icon.png"),
+        dmgIconImg: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/ui/dmg-icon.png"),
+        dpsIconImg: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/ui/dps-icon.png"),
+        durationIconImg: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/ui/duration-spell.png"),
+        durspellIconImg: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/ui/duration.png"),
+        moveIconImg: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/ui/move-icon.png"),
+        typeBoxImg: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/ui/type-info.png"),
         zIndex: 2E3,
         size: {
             x: 427,
@@ -11905,7 +11894,7 @@ ig.baked = !0;
 ig.module("game.entities.ui.battle-deck").requires("impact.entity", "game.entities.card-show", "game.entities.buttons.button-use", "game.entities.buttons.button-info", "game.entities.ui.popup-info").defines(function() {
     EntityBattleDeck = ig.Entity.extend({
         zIndex: 101,
-        deckImg: new ig.Image("media/graphics/game/ui/battle-deck.png"),
+        deckImg: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/ui/battle-deck.png"),
         readPos: {
             x: 0,
             y: 0
@@ -12029,7 +12018,7 @@ ig.module("game.entities.buttons.button-home").requires("game.entities.buttons.b
         size: new Vector2(129, 62),
         fillColor: null,
         zIndex: 1801,
-        img: new ig.Image("media/graphics/game/ui/empty-btn.png"),
+        img: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/ui/empty-btn.png"),
         init: function(b, c, d) {
             this.parent(b, c, d)
         },
@@ -12405,7 +12394,7 @@ ig.baked = !0;
 ig.module("game.entities.game-background").requires("impact.entity").defines(function() {
     EntityGameBackground = ig.Entity.extend({
         zIndex: 1,
-        bgImage: new ig.Image("media/graphics/game/game-bg.png"),
+        bgImage: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/game-bg.png"),
         init: function(b, c, d) {
             this.parent(b, c, d)
         },
@@ -12454,9 +12443,9 @@ ig.module("game.entities.tower").requires("impact.entity").defines(function() {
         },
         freezActive: !1,
         stunActive: !1,
-        bgHPbar: new ig.Image("media/graphics/game/bg-hp-bar.png"),
-        blueHPbar: new ig.Image("media/graphics/game/blue-bar-e.png"),
-        redHPbar: new ig.Image("media/graphics/game/red-bar-e.png"),
+        bgHPbar: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/bg-hp-bar.png"),
+        blueHPbar: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/blue-bar-e.png"),
+        redHPbar: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/red-bar-e.png"),
         cekLogic: null,
         checkScoreOneShot: !1,
         swingsound: "",
@@ -12569,7 +12558,7 @@ ig.module("game.entities.bullets.base-bullets").requires("impact.entity").define
 ig.baked = !0;
 ig.module("game.entities.bullets.bullet-arrow").requires("game.entities.bullets.base-bullets").defines(function() {
     EntityBulletArrow = EntityBaseBullets.extend({
-        animSheet: new ig.AnimationSheet("media/graphics/game/bullet-rest.png", 12, 26),
+        animSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/bullet-rest.png", 12, 26),
         size: {
             x: 5,
             y: 5
@@ -12600,7 +12589,7 @@ ig.module("game.entities.bullets.bullet-arrow").requires("game.entities.bullets.
 ig.baked = !0;
 ig.module("game.entities.tower-ruins").requires("impact.entity").defines(function() {
     EntityTowerRuins = ig.Entity.extend({
-        img: new ig.Image("media/graphics/game/tower-ruins.png"),
+        img: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/tower-ruins.png"),
         offset: {
             x: 7,
             y: 0
@@ -12618,7 +12607,7 @@ ig.module("game.entities.tower-ruins").requires("impact.entity").defines(functio
         }
     });
     EntityBigTowerRuins = ig.Entity.extend({
-        img: new ig.Image("media/graphics/game/towerb-ruins.png"),
+        img: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/towerb-ruins.png"),
         offset: {
             x: 7,
             y: 0
@@ -12643,8 +12632,8 @@ ig.module("game.entities.tower-small").requires("game.entities.tower", "game.ent
             x: 30,
             y: 30
         },
-        towerImg: new ig.Image("media/graphics/game/tower.png"),
-        balistaImg: new ig.Image("media/graphics/game/balista.png"),
+        towerImg: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/tower.png"),
+        balistaImg: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/balista.png"),
         colorStyle: "##ff00a7",
         bullet: EntityBulletArrow,
         damageShot: 60,
@@ -12701,7 +12690,7 @@ ig.module("game.entities.tower-small").requires("game.entities.tower", "game.ent
 ig.baked = !0;
 ig.module("game.entities.bullets.bullet-tower").requires("game.entities.bullets.base-bullets").defines(function() {
     EntityBulletTower = EntityBaseBullets.extend({
-        animSheet: new ig.AnimationSheet("media/graphics/game/bullet-rest.png", 12, 26),
+        animSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/bullet-rest.png", 12, 26),
         zIndex: 1800,
         init: function(b, c, d) {
             this.parent(b, c, d);
@@ -12722,8 +12711,8 @@ ig.module("game.entities.bullets.bullet-tower").requires("game.entities.bullets.
 ig.baked = !0;
 ig.module("game.entities.tower-big").requires("game.entities.tower", "game.entities.bullets.bullet-tower", "game.entities.tower-ruins").defines(function() {
     EntityTowerBig = EntityTower.extend({
-        animSheet: new ig.AnimationSheet("media/graphics/game/red-anim-tower.png", 109, 98),
-        otherAnim: new ig.AnimationSheet("media/graphics/game/blue-anim-tower.png", 109, 102),
+        animSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/red-anim-tower.png", 109, 98),
+        otherAnim: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/blue-anim-tower.png", 109, 102),
         size: {
             x: 46,
             y: 62
@@ -12865,7 +12854,7 @@ ig.baked = !0;
 ig.module("game.entities.effects.explode").requires("game.entities.effects.splash-area").defines(function() {
     EntityExplode = EntitySplashArea.extend({
         zIndex: 1800,
-        animSheet: new ig.AnimationSheet("media/graphics/game/effects/explode.png", 45, 45),
+        animSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/effects/explode.png", 45, 45),
         offset: {
             x: 5,
             y: 5
@@ -12894,7 +12883,7 @@ ig.module("game.entities.effects.explode").requires("game.entities.effects.splas
     });
     EntityBigExplode = EntitySplashArea.extend({
         zIndex: 1800,
-        animSheet: new ig.AnimationSheet("media/graphics/game/effects/big-explode.png", 110, 110),
+        animSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/effects/big-explode.png", 110, 110),
         offset: {
             x: 22,
             y: 12
@@ -12941,7 +12930,7 @@ ig.module("game.entities.effects.explode").requires("game.entities.effects.splas
     });
     EntityTExplode = ig.Entity.extend({
         zIndex: 1800,
-        animSheet: new ig.AnimationSheet("media/graphics/game/effects/t-explode.png", 70, 70),
+        animSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/effects/t-explode.png", 70, 70),
         init: function(b, c, d) {
             this.parent(b, c, d);
             this.addAnim("explode", 0.05, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
@@ -12974,7 +12963,7 @@ ig.baked = !0;
 ig.module("game.entities.effects.fireball").requires("impact.entity").defines(function() {
     EntityFireball = ig.Entity.extend({
         zIndex: 1800,
-        animSheet: new ig.AnimationSheet("media/graphics/game/effects/fireball.png", 50, 90),
+        animSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/effects/fireball.png", 50, 90),
         size: {
             x: 20,
             y: 25
@@ -13039,7 +13028,7 @@ ig.module("game.entities.effects.lightning").requires("game.entities.effects.spl
             y: 0
         },
         segments: 10,
-        animSheet: new ig.AnimationSheet("media/graphics/game/effects/smoke-s.png", 84, 55),
+        animSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/effects/smoke-s.png", 84, 55),
         stunTiming: 0.1,
         init: function(b, c, d) {
             this.parent(b, c, d);
@@ -13115,7 +13104,7 @@ ig.module("game.entities.effects.arrow-shower").requires("impact.entity", "game.
             x: 0,
             y: 20
         },
-        animSheet: new ig.AnimationSheet("media/graphics/game/effects/arrow-shower-s.png", 115, 115),
+        animSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/effects/arrow-shower-s.png", 115, 115),
         init: function(b, c, d) {
             this.parent(b, c, d);
             this.addAnim("shake", 0.1, [0, 1, 2, 3, 0, 1, 2, 3]);
@@ -13135,7 +13124,7 @@ ig.module("game.entities.effects.arrow-shower").requires("impact.entity", "game.
     });
     EntityRainArrow = ig.Entity.extend({
         zIndex: 1800,
-        animSheet: new ig.AnimationSheet("media/graphics/game/effects/arrow-rain-s.png", 90, 108),
+        animSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/effects/arrow-rain-s.png", 90, 108),
         ang: 0,
         offset: {
             x: 45,
@@ -13180,7 +13169,7 @@ ig.baked = !0;
 ig.module("game.entities.effects.freez").requires("game.entities.effects.splash-area").defines(function() {
     EntityFreez = EntitySplashArea.extend({
         zIndex: 10,
-        animSheet: new ig.AnimationSheet("media/graphics/game/effects/freez.png", 116, 96),
+        animSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/effects/freez.png", 116, 96),
         size: {
             x: 90,
             y: 78
@@ -13215,7 +13204,7 @@ ig.baked = !0;
 ig.module("game.entities.effects.hammer-crush").requires("game.entities.effects.splash-area").defines(function() {
     EntityHammerCrush = EntitySplashArea.extend({
         zIndex: 10,
-        animSheet: new ig.AnimationSheet("media/graphics/game/effects/hammer-crush-s.png", 80, 80),
+        animSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/effects/hammer-crush-s.png", 80, 80),
         size: {
             x: 75,
             y: 75
@@ -13254,7 +13243,7 @@ ig.module("game.entities.effects.berserk").requires("game.entities.effects.splas
             x: 120,
             y: 95
         },
-        berserkIMG: new ig.Image("media/graphics/game/effects/berserk-s.png"),
+        berserkIMG: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/effects/berserk-s.png"),
         timeDuration: 4,
         init: function(b, c, d) {
             this.parent(b, c, d);
@@ -13279,7 +13268,7 @@ ig.module("game.entities.effects.berserk").requires("game.entities.effects.splas
 ig.baked = !0;
 ig.module("game.entities.bullets.bullet-mage").requires("game.entities.bullets.base-bullets").defines(function() {
     EntityBulletMage = EntityBaseBullets.extend({
-        animSheet: new ig.AnimationSheet("media/graphics/game/bullet-rest.png", 12, 26),
+        animSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/bullet-rest.png", 12, 26),
         zIndex: 1800,
         init: function(b, c, d) {
             this.parent(b, c, d);
@@ -13300,7 +13289,7 @@ ig.module("game.entities.bullets.bullet-mage").requires("game.entities.bullets.b
 ig.baked = !0;
 ig.module("game.entities.bullets.bullet-axe").requires("game.entities.bullets.base-bullets").defines(function() {
     EntityBulletAxe = EntityBaseBullets.extend({
-        animSheet: new ig.AnimationSheet("media/graphics/game/bullet-axe.png", 20, 20),
+        animSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/bullet-axe.png", 20, 20),
         init: function(b, c, d) {
             this.parent(b, c, d);
             this.addAnim("rotate", 0.05, [0, 1, 2, 3, 4, 5, 6, 7]);
@@ -13320,7 +13309,7 @@ ig.module("game.entities.bullets.bullet-axe").requires("game.entities.bullets.ba
 ig.baked = !0;
 ig.module("game.entities.bullets.bullet-bomb").requires("game.entities.bullets.base-bullets").defines(function() {
     EntityBulletBomb = EntityBaseBullets.extend({
-        animSheet: new ig.AnimationSheet("media/graphics/game/bullet-bomb.png", 20, 20),
+        animSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/bullet-bomb.png", 20, 20),
         speedMovement: 125,
         init: function(b, c, d) {
             this.parent(b, c, d);
@@ -13346,7 +13335,7 @@ ig.baked = !0;
 ig.module("game.entities.ui.board-deck").requires("impact.entity").defines(function() {
     EntityBoardDeck = ig.Entity.extend({
         zIndex: 101,
-        deckImg: new ig.Image("media/graphics/game/ui/board-deck.png"),
+        deckImg: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/ui/board-deck.png"),
         nextCard: [],
         addingNextCard: new ig.Timer,
         justCallOne: !1,
@@ -13395,8 +13384,8 @@ ig.baked = !0;
 ig.module("game.entities.ui.mana-bar").requires("impact.entity").defines(function() {
     EntityManaBar = ig.Entity.extend({
         zIndex: 102,
-        manabarImg: new ig.Image("media/graphics/game/ui/mana-bar.png"),
-        manaImg: new ig.Image("media/graphics/game/ui/mana.png"),
+        manabarImg: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/ui/mana-bar.png"),
+        manaImg: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/ui/mana.png"),
         mana: 3,
         timeStamp: 0,
         manaRegen: 2.5,
@@ -13768,7 +13757,7 @@ ig.module("impact.entity-pool").requires("impact.game").defines(function() {
 ig.baked = !0;
 ig.module("game.entities.effects.splash-elixer").requires("impact.entity", "impact.entity-pool").defines(function() {
     EntitySplashElixer = ig.Entity.extend({
-        animSheet: new ig.AnimationSheet("media/graphics/game/splash-elixer.png", 30, 35),
+        animSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/splash-elixer.png", 30, 35),
         init: function(b, c, d) {
             this.parent(b, c, d);
             this.addAnim("splash", 0.05, [0, 1, 2, 3, 5, 6, 7, 8, 9, 10]);
@@ -13788,7 +13777,7 @@ ig.module("game.entities.effects.splash-elixer").requires("impact.entity", "impa
         }
     });
     EntityElixerDrop = ig.Entity.extend({
-        img: new ig.Image("media/graphics/game/elixer.png"),
+        img: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/elixer.png"),
         cekDelta: 0,
         init: function(b, c, d) {
             this.parent(b, c, d);
@@ -13875,9 +13864,9 @@ ig.module("game.entities.troopers.base-troops").requires("impact.entity", "game.
         attackEnemy: !1,
         animAttackRun: !1,
         pathChoose: [],
-        bgHPbar: new ig.Image("media/graphics/game/bg-hp-bar.png"),
-        blueHPbar: new ig.Image("media/graphics/game/blue-bar-e.png"),
-        redHPbar: new ig.Image("media/graphics/game/red-bar-e.png"),
+        bgHPbar: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/bg-hp-bar.png"),
+        blueHPbar: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/blue-bar-e.png"),
+        redHPbar: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/red-bar-e.png"),
         offsetHPbar: {
             x: 0,
             y: 0
@@ -14064,10 +14053,10 @@ ig.module("game.entities.troopers.base-troops").requires("impact.entity", "game.
 ig.baked = !0;
 ig.module("game.entities.troopers.archer").requires("game.entities.troopers.base-troops", "game.entities.bullets.bullet-arrow").defines(function() {
     EntityArcher = EntityBaseTroops.extend({
-        attackSheet: new ig.AnimationSheet("media/graphics/game/troops/archer-a.png", 40, 50),
-        attackRSheet: new ig.AnimationSheet("media/graphics/game/troops/archer-ar.png", 40, 50),
-        walkSheet: new ig.AnimationSheet("media/graphics/game/troops/archer-w.png", 40, 50),
-        walkRSheet: new ig.AnimationSheet("media/graphics/game/troops/archer-wr.png",
+        attackSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/troops/archer-a.png", 40, 50),
+        attackRSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/troops/archer-ar.png", 40, 50),
+        walkSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/troops/archer-w.png", 40, 50),
+        walkRSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/troops/archer-wr.png",
             40, 50),
         offset: {
             x: 12,
@@ -14151,10 +14140,10 @@ ig.module("game.entities.troopers.archer").requires("game.entities.troopers.base
 ig.baked = !0;
 ig.module("game.entities.troopers.bomb").requires("game.entities.troopers.base-troops").defines(function() {
     EntityBomb = EntityBaseTroops.extend({
-        attackSheet: new ig.AnimationSheet("media/graphics/game/troops/bomb-a.png", 35, 35),
-        walkSheet: new ig.AnimationSheet("media/graphics/game/troops/bomb-w.png", 35, 40),
-        attackRSheet: new ig.AnimationSheet("media/graphics/game/troops/bomb-ar.png", 35, 35),
-        walkRSheet: new ig.AnimationSheet("media/graphics/game/troops/bomb-wr.png", 35, 40),
+        attackSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/troops/bomb-a.png", 35, 35),
+        walkSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/troops/bomb-w.png", 35, 40),
+        attackRSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/troops/bomb-ar.png", 35, 35),
+        walkRSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/troops/bomb-wr.png", 35, 40),
         testingMovement: !1,
         offset: {
             x: 10,
@@ -14236,10 +14225,10 @@ ig.module("game.entities.troopers.bomb").requires("game.entities.troopers.base-t
 ig.baked = !0;
 ig.module("game.entities.troopers.axeman").requires("game.entities.troopers.base-troops").defines(function() {
     EntityAxeman = EntityBaseTroops.extend({
-        attackSheet: new ig.AnimationSheet("media/graphics/game/troops/xmen-a.png", 55, 50),
-        walkSheet: new ig.AnimationSheet("media/graphics/game/troops/xmen-w.png", 50, 50),
-        attackRSheet: new ig.AnimationSheet("media/graphics/game/troops/xmen-ar.png", 55, 50),
-        walkRSheet: new ig.AnimationSheet("media/graphics/game/troops/xmen-wr.png", 50, 50),
+        attackSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/troops/xmen-a.png", 55, 50),
+        walkSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/troops/xmen-w.png", 50, 50),
+        attackRSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/troops/xmen-ar.png", 55, 50),
+        walkRSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/troops/xmen-wr.png", 50, 50),
         testingMovement: !1,
         offset: {
             x: 14,
@@ -14315,10 +14304,10 @@ ig.module("game.entities.troopers.axeman").requires("game.entities.troopers.base
 ig.baked = !0;
 ig.module("game.entities.troopers.axethrow").requires("game.entities.troopers.base-troops").defines(function() {
     EntityAxethrow = EntityBaseTroops.extend({
-        attackSheet: new ig.AnimationSheet("media/graphics/game/troops/xthrow-a.png", 50, 50),
-        walkSheet: new ig.AnimationSheet("media/graphics/game/troops/xthrow-w.png", 60, 50),
-        attackRSheet: new ig.AnimationSheet("media/graphics/game/troops/xthrow-ar.png", 50, 50),
-        walkRSheet: new ig.AnimationSheet("media/graphics/game/troops/xthrow-wr.png", 60, 50),
+        attackSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/troops/xthrow-a.png", 50, 50),
+        walkSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/troops/xthrow-w.png", 60, 50),
+        attackRSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/troops/xthrow-ar.png", 50, 50),
+        walkRSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/troops/xthrow-wr.png", 60, 50),
         testingMovement: !1,
         offset: {
             x: 10,
@@ -14402,10 +14391,10 @@ ig.module("game.entities.troopers.axethrow").requires("game.entities.troopers.ba
 ig.baked = !0;
 ig.module("game.entities.troopers.giant").requires("game.entities.troopers.base-troops").defines(function() {
     EntityGiant = EntityBaseTroops.extend({
-        attackSheet: new ig.AnimationSheet("media/graphics/game/troops/giant-a.png", 90, 80),
-        walkSheet: new ig.AnimationSheet("media/graphics/game/troops/giant-w.png", 75, 80),
-        attackRSheet: new ig.AnimationSheet("media/graphics/game/troops/giant-ar.png", 90, 80),
-        walkRSheet: new ig.AnimationSheet("media/graphics/game/troops/giant-wr.png", 75, 80),
+        attackSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/troops/giant-a.png", 90, 80),
+        walkSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/troops/giant-w.png", 75, 80),
+        attackRSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/troops/giant-ar.png", 90, 80),
+        walkRSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/troops/giant-wr.png", 75, 80),
         testingMovement: !1,
         offset: {
             x: 28,
@@ -14481,10 +14470,10 @@ ig.module("game.entities.troopers.giant").requires("game.entities.troopers.base-
 ig.baked = !0;
 ig.module("game.entities.troopers.hammer").requires("game.entities.troopers.base-troops").defines(function() {
     EntityHammer = EntityBaseTroops.extend({
-        attackSheet: new ig.AnimationSheet("media/graphics/game/troops/hammer-a.png", 60, 65),
-        walkSheet: new ig.AnimationSheet("media/graphics/game/troops/hammer-w.png", 65, 60),
-        attackRSheet: new ig.AnimationSheet("media/graphics/game/troops/hammer-ar.png", 60, 65),
-        walkRSheet: new ig.AnimationSheet("media/graphics/game/troops/hammer-wr.png", 65, 60),
+        attackSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/troops/hammer-a.png", 60, 65),
+        walkSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/troops/hammer-w.png", 65, 60),
+        attackRSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/troops/hammer-ar.png", 60, 65),
+        walkRSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/troops/hammer-wr.png", 65, 60),
         testingMovement: !1,
         offset: {
             x: 8,
@@ -14559,10 +14548,10 @@ ig.module("game.entities.troopers.hammer").requires("game.entities.troopers.base
 ig.baked = !0;
 ig.module("game.entities.troopers.mage").requires("game.entities.troopers.base-troops").defines(function() {
     EntityMage = EntityBaseTroops.extend({
-        walkSheet: new ig.AnimationSheet("media/graphics/game/troops/mage-w.png", 30, 50),
-        walkRSheet: new ig.AnimationSheet("media/graphics/game/troops/mage-wr.png", 30, 50),
-        attackSheet: new ig.AnimationSheet("media/graphics/game/troops/mage-a.png", 35, 50),
-        attackRSheet: new ig.AnimationSheet("media/graphics/game/troops/mage-ar.png", 35, 50),
+        walkSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/troops/mage-w.png", 30, 50),
+        walkRSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/troops/mage-wr.png", 30, 50),
+        attackSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/troops/mage-a.png", 35, 50),
+        attackRSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/troops/mage-ar.png", 35, 50),
         testingMovement: !1,
         offset: {
             x: 8,
@@ -14646,10 +14635,10 @@ ig.module("game.entities.troopers.mage").requires("game.entities.troopers.base-t
 ig.baked = !0;
 ig.module("game.entities.troopers.warrior").requires("game.entities.troopers.base-troops").defines(function() {
     EntityWarrior = EntityBaseTroops.extend({
-        attackSheet: new ig.AnimationSheet("media/graphics/game/troops/warrior-attack-b.png", 55, 65),
-        walkSheet: new ig.AnimationSheet("media/graphics/game/troops/walk-warrior-b.png", 55, 65),
-        attackRSheet: new ig.AnimationSheet("media/graphics/game/troops/warrior-attack-r.png", 55, 65),
-        walkRSheet: new ig.AnimationSheet("media/graphics/game/troops/walk-warrior-r.png", 55,
+        attackSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/troops/warrior-attack-b.png", 55, 65),
+        walkSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/troops/walk-warrior-b.png", 55, 65),
+        attackRSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/troops/warrior-attack-r.png", 55, 65),
+        walkRSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/troops/walk-warrior-r.png", 55,
             65),
         testingMovement: !1,
         offset: {
@@ -14726,8 +14715,8 @@ ig.baked = !0;
 ig.module("game.entities.ui.score").requires("impact.entity").defines(function() {
     EntityScore = ig.Entity.extend({
         zIndex: 102,
-        redScore: new ig.Image("media/graphics/game/ui/red-score.png"),
-        blueScore: new ig.Image("media/graphics/game/ui/blue-score.png"),
+        redScore: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/ui/red-score.png"),
+        blueScore: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/ui/blue-score.png"),
         intScoreBlue: 0,
         intScoreRed: 0,
         init: function(b, c, d) {
@@ -14781,7 +14770,7 @@ ig.module("game.entities.ui.info-text").requires("impact.entity").defines(functi
 ig.baked = !0;
 ig.module("game.entities.ui.time-game").requires("impact.entity", "game.entities.ui.info-text").defines(function() {
     EntityTimeGame = ig.Entity.extend({
-        bgTime: new ig.Image("media/graphics/game/ui/timer.png"),
+        bgTime: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/ui/timer.png"),
         zIndex: 1799,
         seconds: 0,
         minutes: 2,
@@ -15334,7 +15323,7 @@ ig.module("game.entities.ui.ending-result").requires("impact.entity", "game.enti
 ig.baked = !0;
 ig.module("game.entities.effects.spark").requires("impact.entity", "impact.entity-pool").defines(function() {
     EntitySpark = ig.Entity.extend({
-        testImage: new ig.Image("media/graphics/game/spark.png"),
+        testImage: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/spark.png"),
         maxVel: {
             x: 100,
             y: 100
@@ -15397,7 +15386,7 @@ ig.module("game.entities.buttons.button-resume").requires("game.entities.buttons
         type: ig.Entity.TYPE.A,
         size: new Vector2(129, 62),
         zIndex: 95E3,
-        img: new ig.Image("media/graphics/game/ui/empty-btn.png"),
+        img: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/ui/empty-btn.png"),
         init: function(b, c, d) {
             this.parent(b, c, d);
             this.contoller = d.contoller
@@ -15427,7 +15416,7 @@ ig.module("game.entities.buttons.button-resume").requires("game.entities.buttons
 ig.baked = !0;
 ig.module("game.entities.ui.popup-pause").requires("impact.entity", "game.entities.buttons.button-resume", "game.entities.buttons.button-home").defines(function() {
     EntityPopupPause = ig.Entity.extend({
-        img: new ig.Image("media/graphics/game/tutorial-popup.png"),
+        img: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/tutorial-popup.png"),
         zIndex: 1800,
         size: {
             x: 316,
@@ -15514,8 +15503,8 @@ ig.module("game.entities.buttons.button-pause").requires("game.entities.buttons.
         type: ig.Entity.TYPE.A,
         size: new Vector2(64, 38),
         zIndex: 95E3,
-        animSheet: new ig.AnimationSheet("media/graphics/game/ui/timer.png", 64, 38),
-        img: new ig.Image("media/graphics/game/ui/pause-icon.png"),
+        animSheet: new ig.AnimationSheet("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/ui/timer.png", 64, 38),
+        img: new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/game/ui/pause-icon.png"),
         imgPos: {
             x: 30,
             y: 10
@@ -15668,7 +15657,7 @@ ig.module("game.levels.test-desktop").requires("impact.image", "game.entities.br
             height: 30,
             linkWithCollision: !1,
             visible: 1,
-            tilesetName: "media/graphics/backgrounds/desktop/background.jpg",
+            tilesetName: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/backgrounds/desktop/background.jpg",
             repeat: !1,
             preRender: !0,
             distance: "1",
@@ -15728,7 +15717,7 @@ ig.module("game.levels.test-desktop").requires("impact.image", "game.entities.br
             ]
         }]
     };
-    LevelTestDesktopResources = [new ig.Image("media/graphics/backgrounds/desktop/background.jpg")]
+    LevelTestDesktopResources = [new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/backgrounds/desktop/background.jpg")]
 });
 ig.baked = !0;
 ig.module("game.levels.test-mobile").requires("impact.image", "game.entities.branding-logo-placeholder", "game.entities.buttons.button-more-games", "game.entities.pointer").defines(function() {
@@ -15759,7 +15748,7 @@ ig.module("game.levels.test-mobile").requires("impact.image", "game.entities.bra
             height: 40,
             linkWithCollision: !1,
             visible: 1,
-            tilesetName: "media/graphics/backgrounds/mobile/background.jpg",
+            tilesetName: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/backgrounds/mobile/background.jpg",
             repeat: !1,
             preRender: !0,
             distance: "1",
@@ -15829,7 +15818,7 @@ ig.module("game.levels.test-mobile").requires("impact.image", "game.entities.bra
             ]
         }]
     };
-    LevelTestMobileResources = [new ig.Image("media/graphics/backgrounds/mobile/background.jpg")]
+    LevelTestMobileResources = [new ig.Image("https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/backgrounds/mobile/background.jpg")]
 });
 ig.baked = !0;
 ig.module("game.main").requires("impact.game", "plugins.patches.webkit-image-smoothing-patch", "plugins.patches.windowfocus-onMouseDown-patch", "plugins.handlers.dom-handler", "plugins.handlers.size-handler", "plugins.handlers.api-handler", "plugins.audio.sound-handler", "plugins.io.io-manager", "plugins.splash-loader", "plugins.tween", "plugins.url-parameters", "plugins.director", "plugins.impact-storage", "plugins.scale", "plugins.branding.splash", "game.entities.branding-logo-placeholder", "game.entities.buttons.button-more-games",
