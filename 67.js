@@ -8818,7 +8818,7 @@ ig.module("plugins.audio.sound-info").defines(function() {
         },
         bgm: {
             background: {
-                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/bgm",
+                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/bgmz",
                 startOgg: 0,
                 endOgg: 12.309,
                 startMp3: 0,
