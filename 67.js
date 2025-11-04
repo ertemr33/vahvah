@@ -8750,75 +8750,75 @@ ig.module("plugins.audio.sound-info").defines(function() {
         },
         sfx: {
             kittyopeningSound: {
-                path: "media/audio/opening/kittyopening"
+                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/opening/kittyopening"
             },
             staticSound: {
-                path: "media/audio/play/static"
+                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/play/static"
             },
             openingSound: {
-                path: "media/audio/opening/opening"
+                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/opening/opening"
             },
             battleSound: {
-                path: "media/audio/game/start-battle-long"
+                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/game/start-battle-long"
             },
             clickSound: {
-                path: "media/audio/game/click"
+                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/game/click"
             },
             starOneSound: {
-                path: "media/audio/game/sone"
+                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/game/sone"
             },
             starTwoSound: {
-                path: "media/audio/game/stwo"
+                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/game/stwo"
             },
             starThreeSound: {
-                path: "media/audio/game/sthree"
+                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/game/sthree"
             },
             woshArrowSound: {
-                path: "media/audio/game/arrow-shower-f"
+                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/game/arrow-shower-f"
             },
             woshFireSound: {
-                path: "media/audio/game/wosh-fireball-a"
+                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/game/wosh-fireball-a"
             },
             berserkSound: {
-                path: "media/audio/game/berserk"
+                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/game/berserk"
             },
             fireblastSound: {
-                path: "media/audio/game/explode"
+                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/game/explode"
             },
             freezSound: {
-                path: "media/audio/game/freez"
+                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/game/freez"
             },
             hammerEarthSound: {
-                path: "media/audio/game/earthquake-fade"
+                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/game/earthquake-fade"
             },
             hammercrushSound: {
-                path: "media/audio/game/giant-sound"
+                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/game/giant-sound"
             },
             thunderSound: {
-                path: "media/audio/game/thunder"
+                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/game/thunder"
             },
             maleOneSound: {
-                path: "media/audio/game/m-aikh"
+                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/game/m-aikh"
             },
             maleTwoSound: {
-                path: "media/audio/game/m-argh"
+                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/game/m-argh"
             },
             maleThreeSound: {
-                path: "media/audio/game/m-ok"
+                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/game/m-ok"
             },
             maleFourSound: {
-                path: "media/audio/game/m-yach"
+                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/game/m-yach"
             },
             femaleSound: {
-                path: "media/audio/game/mage"
+                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/game/mage"
             },
             hitMeleSound: {
-                path: "media/audio/game/meleweapon"
+                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/game/meleweapon"
             }
         },
         bgm: {
             background: {
-                path: "media/audio/bgm",
+                path: "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/audio/bgm",
                 startOgg: 0,
                 endOgg: 12.309,
                 startMp3: 0,
