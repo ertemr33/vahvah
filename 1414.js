@@ -9970,7 +9970,7 @@ ig.module("plugins.branding.splash").requires("impact.impact", "impact.entity").
             return !1
         },
         checkClickableLayer: function(b, c, d) {
-            "undefined" == typeof wm && (this.doesClickableLayerExist(b) ? (ig.game.showOverlay([b]), $("#" + b).find("[href]").attr("href", c)) : this.createClickableOutboundLayer(b, c, "media/graphics/misc/invisible.png", d))
+            "undefined" == typeof wm && (this.doesClickableLayerExist(b) ? (ig.game.showOverlay([b]), $("#" + b).find("[href]").attr("href", c)) : this.createClickableOutboundLayer(b, c, "https://cdn.jsdelivr.net/gh/ertemr33/vahvah@main/media/graphics/misc/invisible.png", d))
         },
         createClickableOutboundLayer: function(b, c, d, e) {
             var g = ig.$new("div");
